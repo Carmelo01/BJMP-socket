@@ -1,9 +1,18 @@
-
-const io = require('socket.io')(8800, {
+const app = require("express")();
+const server = require("http").createServer(app);
+const io = require('socket.io')(server, {
     cors: {
         origin: "http://localhost:3000"
     }
 })
+
+app.use(cors());
+
+const PORT = process.env.PORT || 8800;
+
+app.get("/", (req, res) => {
+    res.send("Server is running");
+});
 
 let activeUsers = []
 
@@ -49,8 +58,9 @@ io.on("connection", (socket) => {
             console.log("receive: ", data)
         }
     });
-
 })
+
+server.listen(PORT, () => console.log(`Server is listening on port ${PORT}`))
 
 
 
